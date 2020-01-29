@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/lscheidler/git-webhook-plugin"
 )
@@ -33,7 +34,7 @@ func Init(url string) *Jenkins {
 }
 
 func (j *Jenkins) Process(plugin gitWebhookPlugin.GitWebhookPlugin) error {
-	uri := fmt.Sprintf("%s/git/notifyCommit?url=%s&branches=%s", j.Url, plugin.GitUrl(), plugin.GitBranch())
+	uri := fmt.Sprintf("%s/git/notifyCommit?url=%s&branches=%s", j.Url, plugin.GitUrl(), strings.Join(plugin.GitBranches(), ","))
 	log.Println("jenkins:", uri)
 	resp, err := http.Get(uri)
 	if err != nil {
